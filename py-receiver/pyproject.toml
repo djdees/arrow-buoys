@@ -1,0 +1,15 @@
+[project]
+name = "py-receiver"
+version = "0.1.0"
+description = "Arrow IPC receiver for NDBC buoy data visualizations"
+requires-python = ">=3.11"
+dependencies = [
+  "requests>=2.31.0",
+  "pyarrow>=14.0.0",
+  "polars>=0.20.0",
+  "matplotlib>=3.8.0",
+  "python-dotenv>=1.0.0",
+]
+
+[tool.uv]
+package = false

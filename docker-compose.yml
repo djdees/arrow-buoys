@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  go-ingest:
+    build: ./go-ingest
+    environment:
+      - STATIONS=${STATIONS}
+      - DATA_DIR=/data
+      - REFRESH_MINUTES=${REFRESH_MINUTES}
+    volumes:
+      - ${DATA_DIR}:/data
+    restart: unless-stopped
+    networks: [shared]
+
+  go-source:
+    build: ./go-source
+    environment:
+      - DATA_DIR=/data
+      - ARROW_PORT=${ARROW_PORT}
+    volumes:
+      - ${DATA_DIR}:/data
+    depends_on: [go-ingest]
+    ports:
+      - "${ARROW_PORT}:${ARROW_PORT}"
+    networks: [shared]
+
+  py-receiver:
+    build: ./py-receiver
+    environment:
+      - SOURCE_URL=http://go-source:${ARROW_PORT}/stream
+      - OUT_DIR=/app/out
+    volumes:
+      - ${OUT_DIR}:/app/out
+    depends_on: [go-source]
+    networks: [shared]
+
+networks:
+  shared:
+    external: true
+    name: ${NET_NAME}

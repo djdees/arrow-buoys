@@ -1,0 +1,2 @@
+# Run `go mod tidy` in this directory to generate the real go.sum.
+# This placeholder exists so the repo structure is complete.
